@@ -5,6 +5,8 @@ This is *dbmock*, the convenient DB-API 2.0 and async database mocking
 library. With *dbmock* you can test your database layer code without having to
 have a database running for your tests. Have a look at the following example:
 
+.. code:: python
+
     from db_mock import DBMockSync
     mock = (
         DBMockSync()
