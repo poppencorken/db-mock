@@ -1,0 +1,31 @@
+[tool.poetry]
+name = 'db-mock'
+version = '0.0.1'
+description = 'The convenient database mocking library.'
+authors = 'Christoph Rauch <smokey42@users.noreply.github.com>'
+license = 'MIT/Apache-2.0'
+readme = "README.rst"
+url = 'https://github.com/smokey42/db-mock'
+include = ["CHANGELOG.md"]
+
+
+[tool.poetry.dependencies]
+sqlalchemy = "^1"
+sqlparse = "^0"
+six = "^1.12"
+
+[tool.poetry.dev-dependencies]
+tox = "^3.13"
+tox-travis = "^0.12.0"
+black = {version = "^18.3-alpha.0", allows-prereleases = true, python = ">3.6"}
+
+[tool.black]
+line-length = 79
+
+[requires]
+python_version = ['2.7', '3.5', '3.6', '3.7', 'pypy', 'pypy3']
+
+[build-system]
+requires = ['setuptools', 'wheel']
+build-backend ="poetry.masonry.api"
+
