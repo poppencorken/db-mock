@@ -7,30 +7,36 @@ have a database running for your tests. Have a look at the following example:
 
 .. code:: python
 
+
+    # First we have a function
+    def get_book_by_author_name(db, name):
+        autor_id = db.execute(
+            "SELECT id FROM users where name = :name;",
+            {'name': name}).fetchval()
+        return db.execute(
+            "select title from books where author_id = :id limit 1",
+            {'id': author_id}
+        ).fetchval()
+
+    # Then we define our expectations to the function. Asynchronous database
+    # drivers are also supported by the `DBMockAsync` and `DBMockDatabases`
+    # classes.
     from db_mock import DBMockSync
     mock = (
         DBMockSync()
-        .expect_stmt("select email from users where id = 42")
-        .expect_result([(u'douglas@example.com',)])
-        .expect_stmt(
-            "insert into users (id, email) VALUES (:id, :email)",
-            {'id': 17, 'email': u'iain@example.com'},
-        )
-        .expect_lastrowid(100)
+        .expect_stmt("select id from users where name = :name",
+                     {'name': 'Douglas Adams'})
+        .expect_result([(42,)])
+        .expect_stmt("select title from books where author_id = :id limit 1",
+                     {'id': 42})
+        .expect_result([('The Hitchhikers Guide To The Galaxy',)])
     )
-    def do_stuff_with_users(db):
-        db.execute("SELECT email    FROM   users where id=42;")
-        # Just for demonstration purposes...
-        assert result.fetchval() == u'douglas@example.com'
-        ins = db.execute(
-            "INSERT into users (id,email) values (:id,:email)",
-            {'id': 17, 'email': u'iain@example.com'},
-        )
-        return ins.lastrowid
 
+    # Then we run the function. If not all SQL queries are executed in the
+    # expected order, an exception will be raised.
     with mock as db:
-        lastrowid = do_stuff_with_users(db)
-        assert lastrowid == 100
+        title = get_book_by_author_name(db, 'Douglas Adams')
+        assert title == u'The Hitchikers Guide To The Galaxy'
 
 
 -----
